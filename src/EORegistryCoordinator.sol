@@ -634,6 +634,10 @@ contract EORegistryCoordinator is
                 quorumNumbers: BitmapUtils.bitmapToBytesArray(quorumsToRemove)
             });    
         }
+
+        if (address(chainManager) != address(0)){
+            chainManager.updateOperator(operator, uint192(BitmapUtils.orderedBytesArrayToBitmap(quorumsToUpdate, quorumCount)), quorumsToRemove);
+        }
     }
 
     /**
