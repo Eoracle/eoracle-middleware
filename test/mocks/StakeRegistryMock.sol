@@ -56,6 +56,13 @@ contract EOStakeRegistryMock is IEOStakeRegistry {
      */
     function initializeQuorum(uint8 quorumNumber, uint96 minimumStake, StrategyParams[] memory strategyParams) external {}
 
+    /**
+     * @notice Sets the chainManager, which is used to comunicate with Eoracle's contracts
+     * @param newChainManager the new chainManager
+     * @dev only callable by the registry coordinator
+     */
+    function setChainManager(IEOChainManager newChainManager) external {}
+
     /// @notice Adds new strategies and the associated multipliers to the @param quorumNumber.
     function addStrategies(
         uint8 quorumNumber,

@@ -371,6 +371,7 @@ contract EORegistryCoordinator is
     function setChainManager(IEOChainManager newChainManager) external onlyOwner {
         emit ChainManagerUpdated(address(chainManager), address(newChainManager));
         chainManager = newChainManager;
+        stakeRegistry.setChainManager(newChainManager);
     }
 
     /**
@@ -633,10 +634,6 @@ contract EORegistryCoordinator is
                 operator: operator,
                 quorumNumbers: BitmapUtils.bitmapToBytesArray(quorumsToRemove)
             });    
-        }
-
-        if (address(chainManager) != address(0)){
-            chainManager.updateOperator(operator, uint192(BitmapUtils.orderedBytesArrayToBitmap(quorumsToUpdate, quorumCount)), quorumsToRemove);
         }
     }
 
