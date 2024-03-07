@@ -13,7 +13,7 @@ import {IEOStakeRegistry} from "./interfaces/IEOStakeRegistry.sol";
 
 /**
  * @title Minimal implementation of a ServiceManager-type contract.
- * This contract can inherited from or simply used as a point-of-reference.
+ * This contract can be inherited from or simply used as a point-of-reference.
  * @author Layr Labs, Inc.
  */
 abstract contract ServiceManagerBase is IServiceManager, OwnableUpgradeable {
@@ -49,11 +49,11 @@ abstract contract ServiceManagerBase is IServiceManager, OwnableUpgradeable {
     }
 
     /**
-     * @notice Sets the metadata URI for the AVS
+     * @notice Updates the metadata URI for the AVS
      * @param _metadataURI is the metadata URI for the AVS
      * @dev only callable by the owner
      */
-    function setMetadataURI(string memory _metadataURI) public virtual onlyOwner {
+    function updateAVSMetadataURI(string memory _metadataURI) public virtual onlyOwner {
         _avsDirectory.updateAVSMetadataURI(_metadataURI);
     }
 
