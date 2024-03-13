@@ -415,6 +415,7 @@ contract EOIndexRegistryUnitTests_registerOperator is EOIndexRegistryUnitTests {
     function testFuzz_Revert_WhenNonEORegistryCoordinator(address nonEORegistryCoordinator) public {
         cheats.assume(nonEORegistryCoordinator != address(registryCoordinator));
         cheats.assume(nonEORegistryCoordinator != proxyAdminOwner);
+        cheats.assume(nonEORegistryCoordinator != address(proxyAdmin));
         bytes memory quorumNumbers = new bytes(defaultQuorumNumber);
 
         cheats.prank(nonEORegistryCoordinator);
