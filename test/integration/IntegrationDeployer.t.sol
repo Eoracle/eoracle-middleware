@@ -163,7 +163,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         uint256[] memory initializeWithdrawalDelayBlocks = new uint256[](0);
         // DelegationManager
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(delegationManager))),
+            ITransparentUpgradeableProxy(payable(address(delegationManager))),
             address(delegationImplementation),
             abi.encodeWithSelector(
                 DelegationManager.initialize.selector,
@@ -177,7 +177,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         );
         // StrategyManager
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(strategyManager))),
+            ITransparentUpgradeableProxy(payable(address(strategyManager))),
             address(strategyManagerImplementation),
             abi.encodeWithSelector(
                 StrategyManager.initialize.selector,
@@ -189,7 +189,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         );
         // Slasher
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(slasher))),
+            ITransparentUpgradeableProxy(payable(address(slasher))),
             address(slasherImplementation),
             abi.encodeWithSelector(
                 Slasher.initialize.selector,
@@ -200,7 +200,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         );
         // EigenPodManager
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(eigenPodManager))),
+            ITransparentUpgradeableProxy(payable(address(eigenPodManager))),
             address(eigenPodManagerImplementation),
             abi.encodeWithSelector(
                 EigenPodManager.initialize.selector,
@@ -213,7 +213,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         );
         // Delayed Withdrawal Router
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(delayedWithdrawalRouter))),
+            ITransparentUpgradeableProxy(payable(address(delayedWithdrawalRouter))),
             address(delayedWithdrawalRouterImplementation),
             abi.encodeWithSelector(
                 DelayedWithdrawalRouter.initialize.selector,
@@ -225,7 +225,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         );
         // AVSDirectory
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(avsDirectory))),
+            ITransparentUpgradeableProxy(payable(address(avsDirectory))),
             address(avsDirectoryImplemntation),
             abi.encodeWithSelector(
                 AVSDirectory.initialize.selector,
@@ -303,22 +303,22 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
         ServiceManagerMock serviceManagerImplementation = new ServiceManagerMock(IAVSDirectory(avsDirectory), IEORegistryCoordinator(registryCoordinator), stakeRegistry);
 
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(stakeRegistry))),
+            ITransparentUpgradeableProxy(payable(address(stakeRegistry))),
             address(stakeRegistryImplementation)
         );
         
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(blsApkRegistry))),
+            ITransparentUpgradeableProxy(payable(address(blsApkRegistry))),
             address(blsApkRegistryImplementation)
         );
 
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(indexRegistry))),
+            ITransparentUpgradeableProxy(payable(address(indexRegistry))),
             address(indexRegistryImplementation)
         );
 
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(serviceManager))),
+            ITransparentUpgradeableProxy(payable(address(serviceManager))),
             address(serviceManagerImplementation)
         );
 
@@ -326,7 +326,7 @@ abstract contract IntegrationDeployer is Test, IUserDeployer {
 
         EORegistryCoordinator registryCoordinatorImplementation = new EORegistryCoordinator(serviceManager, stakeRegistry, blsApkRegistry, indexRegistry);
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(registryCoordinator))),
+            ITransparentUpgradeableProxy(payable(address(registryCoordinator))),
             address(registryCoordinatorImplementation),
             abi.encodeWithSelector(
                 EORegistryCoordinator.initialize.selector,

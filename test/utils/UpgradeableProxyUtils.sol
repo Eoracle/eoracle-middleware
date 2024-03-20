@@ -6,7 +6,7 @@ import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.s
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {UpgradeableBeacon} from "@openzeppelin/contracts/proxy/beacon/UpgradeableBeacon.sol";
 import {BeaconProxy} from "@openzeppelin/contracts/proxy/beacon/BeaconProxy.sol";
-import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {ITransparentUpgradeableProxy, TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 
 /// Modified from the Openzeppelin foundry upgrades library
 /// Modifications:
@@ -164,10 +164,10 @@ library UpgradeableProxyUtils {
         bytes32 adminSlot = vm.load(proxy, _ADMIN_SLOT);
         if (adminSlot == bytes32(0)) {
             // No admin contract: upgrade directly using interface
-            TransparentUpgradeableProxy(payable(proxy)).upgradeToAndCall(newImpl, data);
+            ITransparentUpgradeableProxy(payable(proxy)).upgradeToAndCall(newImpl, data);
         } else {
             ProxyAdmin admin = ProxyAdmin(address(uint160(uint256(adminSlot))));
-            admin.upgradeAndCall(TransparentUpgradeableProxy(payable(proxy)), newImpl, data);
+            admin.upgradeAndCall(ITransparentUpgradeableProxy(payable(proxy)), newImpl, data);
         }
     }
 

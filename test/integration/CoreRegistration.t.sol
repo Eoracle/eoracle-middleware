@@ -80,11 +80,11 @@ contract Test_CoreRegistration is MockAVSDeployer {
         // Upgrade Registry Coordinator & ServiceManager
         cheats.startPrank(proxyAdminOwner);
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(registryCoordinator))),
+            ITransparentUpgradeableProxy(payable(address(registryCoordinator))),
             address(registryCoordinatorImplementation)
         );
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(serviceManager))),
+            ITransparentUpgradeableProxy(payable(address(serviceManager))),
             address(serviceManagerImplementation)
         );
         cheats.stopPrank();

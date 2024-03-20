@@ -207,22 +207,22 @@ contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
 
         // Third, upgrade the proxy contracts to point to the implementations
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(stakeRegistry))),
+            ITransparentUpgradeableProxy(payable(address(stakeRegistry))),
             address(stakeRegistryImplementation)
         );
 
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(blsApkRegistry))),
+            ITransparentUpgradeableProxy(payable(address(blsApkRegistry))),
             address(blsApkRegistryImplementation)
         );
 
         proxyAdmin.upgrade(
-            TransparentUpgradeableProxy(payable(address(indexRegistry))),
+            ITransparentUpgradeableProxy(payable(address(indexRegistry))),
             address(indexRegistryImplementation)
         );
 
         proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(serviceManager))),
+            ITransparentUpgradeableProxy(payable(address(serviceManager))),
             address(serviceManagerImplementation),
             abi.encodeWithSelector(
                 EOServiceManager.initialize.selector,
@@ -264,7 +264,7 @@ contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
         ) = _parseRegistryCoordinatorParams(config_data);
 
         _proxyAdmin.upgradeAndCall(
-            TransparentUpgradeableProxy(payable(address(_registryCoordinator))),
+            ITransparentUpgradeableProxy(payable(address(_registryCoordinator))),
             address(_registryCoordinatorImplementation),
             abi.encodeWithSelector(
                 EORegistryCoordinator.initialize.selector,
@@ -322,19 +322,19 @@ contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
 
     function _verifyImplementations() internal view {
         require(proxyAdmin.getProxyImplementation(
-            TransparentUpgradeableProxy(payable(address(serviceManager)))) == address(serviceManagerImplementation),
+            ITransparentUpgradeableProxy(payable(address(serviceManager)))) == address(serviceManagerImplementation),
             "EOServiceManager: implementation set incorrectly");
         require(proxyAdmin.getProxyImplementation(
-            TransparentUpgradeableProxy(payable(address(registryCoordinator)))) == address(registryCoordinatorImplementation),
+            ITransparentUpgradeableProxy(payable(address(registryCoordinator)))) == address(registryCoordinatorImplementation),
             "registryCoordinator: implementation set incorrectly");
         require(proxyAdmin.getProxyImplementation(
-            TransparentUpgradeableProxy(payable(address(blsApkRegistry)))) == address(blsApkRegistryImplementation),
+            ITransparentUpgradeableProxy(payable(address(blsApkRegistry)))) == address(blsApkRegistryImplementation),
             "blsApkRegistry: implementation set incorrectly");
         require(proxyAdmin.getProxyImplementation(
-            TransparentUpgradeableProxy(payable(address(indexRegistry)))) == address(indexRegistryImplementation),
+            ITransparentUpgradeableProxy(payable(address(indexRegistry)))) == address(indexRegistryImplementation),
             "indexRegistry: implementation set incorrectly");
         require(proxyAdmin.getProxyImplementation(
-            TransparentUpgradeableProxy(payable(address(stakeRegistry)))) == address(stakeRegistryImplementation),
+            ITransparentUpgradeableProxy(payable(address(stakeRegistry)))) == address(stakeRegistryImplementation),
             "stakeRegistry: implementation set incorrectly");
     }
 
