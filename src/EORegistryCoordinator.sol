@@ -488,8 +488,7 @@ contract EORegistryCoordinator is
             if ( chainValidatorSignature.X != 0 && chainValidatorSignature.Y != 0 && pubkeyG2.X[0] != 0 && pubkeyG2.X[1] != 0 && pubkeyG2.Y[0] != 0 && pubkeyG2.Y[1] != 0){
                 // chain validator expects the sig and pubkey spread as arrays.
                 chainManager.registerChainValidator(operator, results.operatorStakes, [chainValidatorSignature.X ,chainValidatorSignature.Y],[pubkeyG2.X[0],pubkeyG2.X[1],pubkeyG2.Y[0],pubkeyG2.Y[1]]);
-            }
-            else{
+            } else {
                 chainManager.registerDataValidator(operator, results.operatorStakes);
             }
         }
