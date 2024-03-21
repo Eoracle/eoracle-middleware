@@ -462,7 +462,7 @@ contract Holesky_DeployEOMiddlewareContracts is
         );
         require(
             proxyAdmin.getProxyImplementation(
-                TransparentUpgradeableProxy(
+                ITransparentUpgradeableProxy(
                     payable(address(registryCoordinator))
                 )
             ) == address(registryCoordinatorImplementation),
@@ -470,19 +470,19 @@ contract Holesky_DeployEOMiddlewareContracts is
         );
         require(
             proxyAdmin.getProxyImplementation(
-                TransparentUpgradeableProxy(payable(address(blsApkRegistry)))
+                ITransparentUpgradeableProxy(payable(address(blsApkRegistry)))
             ) == address(blsApkRegistryImplementation),
             "blsApkRegistry: implementation set incorrectly"
         );
         require(
             proxyAdmin.getProxyImplementation(
-                TransparentUpgradeableProxy(payable(address(indexRegistry)))
+                ITransparentUpgradeableProxy(payable(address(indexRegistry)))
             ) == address(indexRegistryImplementation),
             "indexRegistry: implementation set incorrectly"
         );
         require(
             proxyAdmin.getProxyImplementation(
-                TransparentUpgradeableProxy(payable(address(stakeRegistry)))
+                ITransparentUpgradeableProxy(payable(address(stakeRegistry)))
             ) == address(stakeRegistryImplementation),
             "stakeRegistry: implementation set incorrectly"
         );
