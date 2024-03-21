@@ -3,9 +3,9 @@ pragma solidity =0.8.12;
 
 import "forge-std/Script.sol";
 import "forge-std/StdJson.sol";
-import "eigenlayer-contracts/script/utils/ExistingDeploymentParser.sol";
 
 import {Utils} from "../../utils/Utils.s.sol";
+import {ExistingDeploymentParser} from "../../utils/ExistingDeploymentParser.sol";
 
 // OpenZeppelin
 import "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
@@ -20,7 +20,8 @@ import {PauserRegistry} from "eigenlayer-contracts/src/contracts/permissions/Pau
 import {
     EORegistryCoordinator,
     IEORegistryCoordinator,
-    IEOStakeRegistry
+    IEOStakeRegistry,
+    IPauserRegistry
     } from "../../../src/EORegistryCoordinator.sol";
 import {EOBLSApkRegistry} from "../../../src/EOBLSApkRegistry.sol";
 import {EOIndexRegistry} from "../../../src/EOIndexRegistry.sol";
@@ -33,7 +34,7 @@ import {OperatorStateRetriever} from "src/OperatorStateRetriever.sol";
 contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
     
     string public existingDeploymentInfoPath  = string(bytes("./script/deploy/goerli/config/eigenlayer_deployment_goerli.json"));
-    string public deployConfigPath = string(bytes("./script/deploy/goerli/config/middleware_config.json"));
+    string public deployConfigPath = string(bytes("./script/deploy/goerli/config/middleware_config_goerli.json"));
     string public outputPath = string.concat("script/deploy/goerli/output/eoracle_middleware_deployment_data.json");
 
     ProxyAdmin public proxyAdmin;
@@ -96,7 +97,7 @@ contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
             indexRegistry,
             operatorStateRetriever,
             proxyAdmin
-        ) = _deployEOMiddlewareContracts(delegation, avsDirectory, config_data);
+        ) = _deployEOMiddlewareContracts(delegationManager, avsDirectory, config_data);
 
         vm.stopBroadcast();
 
@@ -308,7 +309,7 @@ contract Goerli_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser {
         require(address(_indexRegistry.registryCoordinator()) == address(registryCoordinator), "indexRegistry.registryCoordinator() != registryCoordinator");
 
         require(address(_stakeRegistry.registryCoordinator()) == address(registryCoordinator), "stakeRegistry.registryCoordinator() != registryCoordinator");
-        require(address(_stakeRegistry.delegation()) == address(delegation), "stakeRegistry.delegationManager() != delegation");
+        require(address(_stakeRegistry.delegation()) == address(delegationManager), "stakeRegistry.delegationManager() != delegation");
 
         // TODO: add this checks once we update the service manager properties to be public
         // require(address(_serviceManager.registryCoordinator()) == address(registryCoordinator), "_serviceManager.registryCoordinator() != registryCoordinator");
