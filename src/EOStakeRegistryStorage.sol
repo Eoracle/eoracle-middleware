@@ -59,5 +59,5 @@ abstract contract EOStakeRegistryStorage is IEOStakeRegistry {
 
     // storage gap for upgradeability
     // slither-disable-next-line shadowing-state
-    uint256[45] private __GAP;
+    uint256[44] private __GAP;
 }
