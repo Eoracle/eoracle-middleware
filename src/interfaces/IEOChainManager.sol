@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.12;
+pragma solidity =0.8.12;
 
 interface IEOChainManager {
     /// @notice Registers a new data validator
