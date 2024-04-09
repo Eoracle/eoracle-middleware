@@ -6,6 +6,7 @@ import {IStrategyManager, IStrategy} from "eigenlayer-contracts/src/contracts/in
 
 import {IEORegistryCoordinator} from "./interfaces/IEORegistryCoordinator.sol";
 import {IEOStakeRegistry} from  "./interfaces/IEOStakeRegistry.sol";
+import {IEOChainManager} from "./interfaces/IEOChainManager.sol";
 
 /**
  * @title Storage variables for the `EOStakeRegistry` contract.
@@ -23,6 +24,9 @@ abstract contract EOStakeRegistryStorage is IEOStakeRegistry {
 
     /// @notice The address of the Delegation contract for EigenLayer.
     IDelegationManager public immutable delegation;
+
+    /// @notice the Chain Manager contract which forwards calls onto EOracle's contracts
+    IEOChainManager public chainManager;
 
     /// @notice the coordinator contract that this registry is associated with
     address public immutable registryCoordinator;
@@ -55,5 +59,5 @@ abstract contract EOStakeRegistryStorage is IEOStakeRegistry {
 
     // storage gap for upgradeability
     // slither-disable-next-line shadowing-state
-    uint256[45] private __GAP;
+    uint256[44] private __GAP;
 }
