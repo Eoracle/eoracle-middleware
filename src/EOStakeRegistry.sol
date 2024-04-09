@@ -149,7 +149,7 @@ contract EOStakeRegistry is EOStakeRegistryStorage {
         bytes calldata quorumNumbers
     ) external onlyEORegistryCoordinator returns (uint192) {
         uint192 quorumsToRemove;
-uint96[] memory newStakeWeights = new uint96[](IEORegistryCoordinator(registryCoordinator).quorumCount());
+        uint96[] memory newStakeWeights = new uint96[](IEORegistryCoordinator(registryCoordinator).quorumCount());
 
         /**
          * For each quorum, update the operator's stake and record the delta
