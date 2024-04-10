@@ -15,10 +15,6 @@ import "../../utils/MockAVSDeployer.sol";
 contract RegistrationFlowTest is MockAVSDeployer {
     using BN254 for BN254.G1Point;
 
-    event Registered(address operator, uint96[] stakes, uint256[2] signature, uint256[4] pubkey);
-    event Deregistered(address operator);
-    event Updated(address operator, uint96[] stakes);
-
     EOChainManagerHarness public chainManager;
     TransparentUpgradeableProxy private transparentProxy;
     address private whitelister = makeAddr("whitelister");
