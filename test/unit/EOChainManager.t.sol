@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.12;
 
-import { ProxyAdmin } from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
-import { TransparentUpgradeableProxy } from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
-import { Test, console2 } from "forge-std/Test.sol";
-import { EOChainManager } from "../../src/EOChainManager.sol";
-import { IEOChainManager } from "../../src/interfaces/IEOChainManager.sol";
+import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
+import {TransparentUpgradeableProxy} from
+    "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
+import {Test, console2} from "forge-std/Test.sol";
+import {EOChainManager} from "../../src/EOChainManager.sol";
+import {IEOChainManager} from "../../src/interfaces/IEOChainManager.sol";
 
 contract EOChainManagerTest is Test {
     ProxyAdmin private proxyAdmin;
     EOChainManager public chainManager;
-    TransparentUpgradeableProxy private transparentProxy;    
+    TransparentUpgradeableProxy private transparentProxy;
     address private owner = makeAddr("owner");
     address private registryCoordinator = makeAddr("registryCoordinator");
     address private operator = makeAddr("operator");
@@ -124,13 +125,13 @@ contract EOChainManagerTest is Test {
         chainManager.updateOperator(operator, new uint96[](0));
     }
 
-    function _registerDataValidator(address validator, uint96 stake) internal view {
+    function _registerDataValidator(address validator, uint96 stake) internal {
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = stake;
         chainManager.registerDataValidator(validator, stakes);
     }
 
-    function _registerChainValidator(address validator, uint96 stake) internal view {
+    function _registerChainValidator(address validator, uint96 stake) internal {
         uint256[2] memory signature = [uint256(1), uint256(2)];
         uint256[4] memory publicKey = [uint256(3), uint256(4), uint256(5), uint256(6)];
         uint96[] memory stakes = new uint96[](1);

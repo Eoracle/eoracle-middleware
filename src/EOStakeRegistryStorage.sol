@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity =0.8.12;
 
-import {IDelegationManager} from "eigenlayer-contracts/src/contracts/interfaces/IDelegationManager.sol";
-import {IStrategyManager, IStrategy} from "eigenlayer-contracts/src/contracts/interfaces/IStrategyManager.sol";
+import {IDelegationManager} from
+    "eigenlayer-contracts/src/contracts/interfaces/IDelegationManager.sol";
+import {
+    IStrategyManager,
+    IStrategy
+} from "eigenlayer-contracts/src/contracts/interfaces/IStrategyManager.sol";
 
 import {IEORegistryCoordinator} from "./interfaces/IEORegistryCoordinator.sol";
-import {IEOStakeRegistry} from  "./interfaces/IEOStakeRegistry.sol";
+import {IEOStakeRegistry} from "./interfaces/IEOStakeRegistry.sol";
 import {IEOChainManager} from "./interfaces/IEOChainManager.sol";
 
 /**
@@ -14,19 +18,15 @@ import {IEOChainManager} from "./interfaces/IEOChainManager.sol";
  * @notice This storage contract is separate from the logic to simplify the upgrade process.
  */
 abstract contract EOStakeRegistryStorage is IEOStakeRegistry {
-    
     /// @notice Constant used as a divisor in calculating weights.
     uint256 public constant WEIGHTING_DIVISOR = 1e18;
     /// @notice Maximum length of dynamic arrays in the `strategyParams` mapping.
     uint8 public constant MAX_WEIGHING_FUNCTION_LENGTH = 32;
     /// @notice Constant used as a divisor in dealing with BIPS amounts.
-    uint256 internal constant MAX_BIPS = 10000;
+    uint256 internal constant MAX_BIPS = 10_000;
 
     /// @notice The address of the Delegation contract for EigenLayer.
     IDelegationManager public immutable delegation;
-
-    /// @notice the Chain Manager contract which forwards calls onto EOracle's contracts
-    IEOChainManager public chainManager;
 
     /// @notice the coordinator contract that this registry is associated with
     address public immutable registryCoordinator;
@@ -48,9 +48,11 @@ abstract contract EOStakeRegistryStorage is IEOStakeRegistry {
     mapping(uint8 => StrategyParams[]) public strategyParams;
     mapping(uint8 => IStrategy[]) public strategiesPerQuorum;
 
+    /// @notice the Chain Manager contract which forwards calls onto EOracle's contracts
+    IEOChainManager public chainManager;
 
     constructor(
-        IEORegistryCoordinator _registryCoordinator, 
+        IEORegistryCoordinator _registryCoordinator,
         IDelegationManager _delegationManager
     ) {
         registryCoordinator = address(_registryCoordinator);

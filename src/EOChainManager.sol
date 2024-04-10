@@ -14,17 +14,21 @@ import {IEOChainManager} from "./interfaces/IEOChainManager.sol";
 ///         with the EOracle chain will be implemented in the future.
 /// @dev Inherits IEOChainManager, Ownable2StepUpgradeable, and AccessControlUpgradeable for access control functionalities
 contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpgradeable {
-    /*******************************************************************************
-                               CONSTANTS AND IMMUTABLES 
-    *******************************************************************************/
+    /**
+     *
+     *                            CONSTANTS AND IMMUTABLES
+     *
+     */
 
     /// @notice Public constants for the roles
     bytes32 public constant CHAIN_VALIDATOR_ROLE = keccak256("CHAIN_VALIDATOR");
     bytes32 public constant DATA_VALIDATOR_ROLE = keccak256("DATA_VALIDATOR");
 
-    /*******************************************************************************
-                                       STATE 
-    *******************************************************************************/
+    /**
+     *
+     *                                    STATE
+     *
+     */
 
     // @notice The address of eoracle middleware RegistryCoordinator
     address public registryCoordinator;
@@ -36,7 +40,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     }
 
     /// @dev Initializes the contract by setting up roles and ownership
-    function initialize() public initializer {
+    function initialize() public virtual initializer {
         __AccessControl_init();
         __Ownable_init();
 
@@ -45,52 +49,46 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     }
 
     /// @dev Sets the registry coordinator which will be the only contract allowed to call the register functions
-    function setRegistryCoordinator(
-        address _registryCoordinator
-    ) external onlyOwner {
+    function setRegistryCoordinator(address _registryCoordinator) external onlyOwner {
         registryCoordinator = _registryCoordinator;
     }
 
-    /*******************************************************************************
-                      EXTERNAL FUNCTIONS - IEOChainManager
-    *******************************************************************************/
+    /**
+     *
+     *                   EXTERNAL FUNCTIONS - IEOChainManager
+     *
+     */
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
     function registerDataValidator(
         address operator,
         uint96[] calldata /* stakes */
-    ) external view onlyRegistryCoordinator {
+    ) external virtual onlyRegistryCoordinator {
         require(hasRole(DATA_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
     function registerChainValidator(
         address operator,
-        uint96[] calldata /* stakes */,
-        uint256[2] calldata /* signature */,
+        uint96[] calldata, /* stakes */
+        uint256[2] calldata, /* signature */
         uint256[4] calldata /* pubkey */
-    ) external view onlyRegistryCoordinator {
+    ) external virtual onlyRegistryCoordinator {
         require(hasRole(CHAIN_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
-    function deregisterValidator(
-        address operator
-    ) external view onlyRegistryCoordinator {
+    function deregisterValidator(address operator) external virtual onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
     function updateOperator(
         address operator,
         uint96[] calldata newStakeWeights
-    ) external view onlyRegistryCoordinator {
+    ) external virtual onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
     }
 
