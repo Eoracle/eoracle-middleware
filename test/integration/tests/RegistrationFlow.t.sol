@@ -38,7 +38,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
         vm.stopPrank();
         assertEq(chainManager.hasRole(chainManager.DEFAULT_ADMIN_ROLE(), whitelister), true);
         vm.startPrank(registryCoordinatorOwner);
-        registryCoordinator.setChainManager(EOChainManager(address(chainManager)));
+        registryCoordinator.setChainManager(IEOChainManager(address(chainManager)));
         vm.stopPrank();
         vm.deal(operator, 100 ether);
     }
