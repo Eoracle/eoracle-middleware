@@ -9,11 +9,17 @@ import {EOChainManager} from "../../src/EOChainManager.sol";
 import {IEOChainManager} from "../../src/interfaces/IEOChainManager.sol";
 
 contract EOChainManagerTest is Test {
+    event DataValidatorRegistered(address validator, uint96[] stakes);
+    event ChainValidatorRegistered(address validator, uint96[] stakes);
+    event OperatorUpdated(address validator, uint96[] stakes);
+    event ValidatorDeregistered(address validator);
+
     ProxyAdmin private proxyAdmin;
     EOChainManager public chainManager;
     TransparentUpgradeableProxy private transparentProxy;
     address private owner = makeAddr("owner");
     address private registryCoordinator = makeAddr("registryCoordinator");
+    address private stakeRegistry = makeAddr("stakeRegistry");
     address private operator = makeAddr("operator");
 
     function setUp() public {
@@ -58,8 +64,12 @@ contract EOChainManagerTest is Test {
         chainManager.setRegistryCoordinator(registryCoordinator);
         chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
         vm.stopPrank();
+        vm.expectEmit(true, true, true, true);
+        uint96[] memory stakes = new uint96[](1);
+        stakes[0] = 1000;
+        emit DataValidatorRegistered(operator, stakes);
         vm.prank(registryCoordinator);
-        _registerDataValidator(operator, 1000);
+        _registerDataValidator(operator, stakes[0]);
     }
 
     function test_RegisterChainValidatorRevertIfNotRegistryCoordinator() public {
@@ -81,8 +91,12 @@ contract EOChainManagerTest is Test {
         chainManager.setRegistryCoordinator(registryCoordinator);
         chainManager.grantRole(chainManager.CHAIN_VALIDATOR_ROLE(), operator);
         vm.stopPrank();
+        vm.expectEmit(true, true, true, true);
+        uint96[] memory stakes = new uint96[](1);
+        stakes[0] = 999;
+        emit ChainValidatorRegistered(operator, stakes);
         vm.prank(registryCoordinator);
-        _registerChainValidator(operator, 999);
+        _registerChainValidator(operator, stakes[0]);
     }
 
     function test_DeregisterValidatorRevertIfNotRegistryCoordinator() public {
@@ -105,24 +119,28 @@ contract EOChainManagerTest is Test {
         chainManager.deregisterValidator(operator);
     }
 
-    function test_UpdateOperatorRevertIfNotRegistryCoordinator() public {
+    function test_UpdateOperatorRevertIfNotStakeRegistry() public {
         vm.startPrank(owner);
-        chainManager.setRegistryCoordinator(registryCoordinator);
+        chainManager.setStakeRegistry(address(stakeRegistry));
         chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
         vm.stopPrank();
 
-        vm.expectRevert("NotRegistryCoordinator");
+        vm.expectRevert("NotStakeRegistry");
+        vm.prank(registryCoordinator);
         chainManager.updateOperator(operator, new uint96[](0));
     }
 
     function test_UpdateOperator() public {
         vm.startPrank(owner);
-        chainManager.setRegistryCoordinator(registryCoordinator);
+        chainManager.setStakeRegistry(address(stakeRegistry));
         chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
         vm.stopPrank();
-
-        vm.prank(registryCoordinator);
-        chainManager.updateOperator(operator, new uint96[](0));
+        vm.expectEmit(true, true, true, true);
+        uint96[] memory stakes = new uint96[](1);
+        stakes[0] = 1000;
+        emit OperatorUpdated(operator, stakes);
+        vm.prank(stakeRegistry);
+        chainManager.updateOperator(operator, stakes);
     }
 
     function _registerDataValidator(address validator, uint96 stake) internal {

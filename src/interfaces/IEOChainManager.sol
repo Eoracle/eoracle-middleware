@@ -2,6 +2,11 @@
 pragma solidity =0.8.12;
 
 interface IEOChainManager {
+    event DataValidatorRegistered(address operator, uint96[] stakes);
+    event ChainValidatorRegistered(address operator, uint96[] stakes);
+    event OperatorUpdated(address operator, uint96[] stakes);
+    event ValidatorDeregistered(address operator);
+
     /// @notice Registers a new data validator
     /// @param operator The address of the operator to register as a data validator
     /// @param stakes An array of stake amounts

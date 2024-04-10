@@ -32,6 +32,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
 
     // @notice The address of eoracle middleware RegistryCoordinator
     address public registryCoordinator;
+    address public stakeRegistry;
 
     /// @dev Modifier for registry coordinator
     modifier onlyRegistryCoordinator() {
@@ -39,8 +40,14 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         _;
     }
 
+    /// @dev Modifier for stake registry
+    modifier onlyStakeRegistry() {
+        require(msg.sender == stakeRegistry, "NotStakeRegistry");
+        _;
+    }
+
     /// @dev Initializes the contract by setting up roles and ownership
-    function initialize() public virtual initializer {
+    function initialize() public initializer {
         __AccessControl_init();
         __Ownable_init();
 
@@ -53,6 +60,9 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         registryCoordinator = _registryCoordinator;
     }
 
+    function setStakeRegistry(address _stakeRegistry) external onlyOwner {
+        stakeRegistry = _stakeRegistry;
+    }
     /**
      *
      *                   EXTERNAL FUNCTIONS - IEOChainManager
@@ -62,34 +72,38 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @inheritdoc IEOChainManager
     function registerDataValidator(
         address operator,
-        uint96[] calldata /* stakes */
-    ) external virtual onlyRegistryCoordinator {
+        uint96[] calldata stakes
+    ) external onlyRegistryCoordinator {
         require(hasRole(DATA_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
+        emit DataValidatorRegistered(operator, stakes);
     }
 
     /// @inheritdoc IEOChainManager
     function registerChainValidator(
         address operator,
-        uint96[] calldata, /* stakes */
+        uint96[] calldata stakes,
         uint256[2] calldata, /* signature */
         uint256[4] calldata /* pubkey */
-    ) external virtual onlyRegistryCoordinator {
+    ) external onlyRegistryCoordinator {
         require(hasRole(CHAIN_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
+        emit ChainValidatorRegistered(operator, stakes);
     }
 
     /// @inheritdoc IEOChainManager
     function deregisterValidator(address operator) external virtual onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
+        emit ValidatorDeregistered(operator);
     }
 
     /// @inheritdoc IEOChainManager
     function updateOperator(
         address operator,
         uint96[] calldata newStakeWeights
-    ) external virtual onlyRegistryCoordinator {
+    ) external onlyStakeRegistry {
         // For now just whitelisting. EO chain integration to come.
+        emit OperatorUpdated(operator, newStakeWeights);
     }
 
     // Placeholder for upgradeable contracts
