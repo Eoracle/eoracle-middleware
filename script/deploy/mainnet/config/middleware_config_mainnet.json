@@ -74,8 +74,8 @@
   "operatorSetParams": [
     {
       "0_maxOperatorCount": 200,
-      "1_kickBIPsOfOperatorStake": 0,
-      "2_kickBIPsOfTotalStake": 1000
+      "1_kickBIPsOfOperatorStake": 11000,
+      "2_kickBIPsOfTotalStake": 50
     }
   ]
 }
