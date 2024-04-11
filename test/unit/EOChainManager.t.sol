@@ -9,10 +9,10 @@ import {EOChainManager} from "../../src/EOChainManager.sol";
 import {IEOChainManager} from "../../src/interfaces/IEOChainManager.sol";
 
 contract EOChainManagerTest is Test {
-    event DataValidatorRegistered(address validator, uint96[] stakes);
-    event ChainValidatorRegistered(address validator, uint96[] stakes);
-    event OperatorUpdated(address validator, uint96[] stakes);
-    event ValidatorDeregistered(address validator);
+    event DataValidatorRegistered(address indexed operator, uint96[] stakes);
+    event ChainValidatorRegistered(address indexed operator, uint96[] stakes);
+    event OperatorUpdated(address indexed operator, uint96[] stakes);
+    event ValidatorDeregistered(address indexed operator);
 
     ProxyAdmin private proxyAdmin;
     EOChainManager public chainManager;

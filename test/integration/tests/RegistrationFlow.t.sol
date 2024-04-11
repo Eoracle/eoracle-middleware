@@ -11,10 +11,10 @@ import "../../utils/MockAVSDeployer.sol";
 contract RegistrationFlowTest is MockAVSDeployer {
     using BN254 for BN254.G1Point;
 
-    event DataValidatorRegistered(address validator, uint96[] stakes);
-    event ChainValidatorRegistered(address validator, uint96[] stakes);
-    event OperatorUpdated(address validator, uint96[] stakes);
-    event ValidatorDeregistered(address validator);
+    event DataValidatorRegistered(address indexed validator, uint96[] stakes);
+    event ChainValidatorRegistered(address indexed validator, uint96[] stakes);
+    event OperatorUpdated(address indexed validator, uint96[] stakes);
+    event ValidatorDeregistered(address indexed validator);
 
     EOChainManager public chainManager;
     TransparentUpgradeableProxy private transparentProxy;
@@ -75,9 +75,9 @@ contract RegistrationFlowTest is MockAVSDeployer {
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = 1000;
         _setOperatorWeight(operator, 0, stakes[0]);
-        cheats.prank(operator);
-        vm.expectEmit(true, true);
+        vm.expectEmit(true, true, true, true);
         emit DataValidatorRegistered(operator, stakes);
+        cheats.prank(operator);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
     }
 
@@ -98,16 +98,16 @@ contract RegistrationFlowTest is MockAVSDeployer {
 
         ISignatureUtils.SignatureWithSaltAndExpiry memory signature;
         IEOBLSApkRegistry.PubkeyRegistrationParams memory params;
-        vm.expectEmit(true, true);
-        emit DataValidatorRegistered(operator, stakes);
         cheats.prank(operator);
+        vm.expectEmit(true, true, true, true);
+        emit DataValidatorRegistered(operator, stakes);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
 
         address[] memory operators = new address[](1);
         operators[0] = operator;
         stakes[0] = 2000;
         _setOperatorWeight(operator, 0, stakes[0]);
-        vm.expectEmit(true, true);
+        vm.expectEmit(true, true, true, true);
         emit OperatorUpdated(operator, stakes);
         cheats.prank(registryCoordinatorOwner);
         registryCoordinator.updateOperators(operators);
