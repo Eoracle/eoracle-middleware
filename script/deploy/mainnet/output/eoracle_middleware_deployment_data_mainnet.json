@@ -1,3 +1,27 @@
 {
-  "placeholder":{}
+  "addresses": {
+    "blsApkRegistry": "0xBAdDb21a8fa8fbFDF81e967819B283787EbF84ec",
+    "blsApkRegistryImplementation": "0xA41a4A572ac1C36B46d01998BeB84460d8c7Fb7e",
+    "indexRegistry": "0x99617c9AE252d3924335507Fa17B94E5f2C3582B",
+    "indexRegistryImplementation": "0x89Bd32161F918b30F619d7c8bC6086Bdf812Ee34",
+    "operatorStateRetriever": "0x92099261a6De8007f826c299e64F0453314d88d2",
+    "proxyAdmin": "0xbf26F912B24aE890fEf17eCcbF4EF34d03D991e4",
+    "registryCoordinator": "0x757E6f572AfD8E111bD913d35314B5472C051cA8",
+    "registryCoordinatorImplementation": "0xe7a11666E91B1a16Cb8a560AF5f58E35776fE9Ae",
+    "serviceManager": "0x23221c5bB90C7c57ecc1E75513e2E4257673F0ef",
+    "serviceManagerImplementation": "0xbE945dc0635214465b6a75B01AC46d6662636F51",
+    "stakeRegistry": "0x761DF0e99160a4bd19391475D2a1101eaab20F24",
+    "stakeRegistryImplementation": "0xD9Cc5AA46E012A6E0B3006EF8ff9Fe6E69f072B4"
+  },
+  "chainInfo": {
+    "chainId": 1,
+    "deploymentBlock": 19630853
+  },
+  "permissions": {
+    "churner": "0xCd073dA4A004c42265d550c14EAd8531ec6140Ef",
+    "ejector": "0xB4c1fA6e5294573A140265E2B1B0d22748347743",
+    "eoracleOwner": "0x0dF4E6fDD8aF7b889B15dcA9C7307467133EB0a3",
+    "eoracleUpgrader": "0xa86aC54049b103A0a6e2Cdc904Cef28D3b01e24C",
+    "pauserRegistry": "0x670EdC9bc9f7B592851cC2197268d5E30CB68957"
+  }
 }
