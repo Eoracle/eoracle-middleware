@@ -4,7 +4,7 @@
   },
 
   "permissions": {
-    "owner": "0x0dF4E6fDD8aF7b889B15dcA9C7307467133EB0a3",
+    "owner": "0xB4c1fA6e5294573A140265E2B1B0d22748347743",
     "upgrader": "0xa86aC54049b103A0a6e2Cdc904Cef28D3b01e24C",
     "churner": "0xCd073dA4A004c42265d550c14EAd8531ec6140Ef",
     "ejector": "0xB4c1fA6e5294573A140265E2B1B0d22748347743",
@@ -74,8 +74,8 @@
   "operatorSetParams": [
     {
       "0_maxOperatorCount": 200,
-      "1_kickBIPsOfOperatorStake": 0,
-      "2_kickBIPsOfTotalStake": 1000
+      "1_kickBIPsOfOperatorStake": 11000,
+      "2_kickBIPsOfTotalStake": 50
     }
   ]
 }
