@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity =0.8.12;
 
 import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import {AccessControlUpgradeable} from
@@ -35,6 +35,11 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         _;
     }
 
+    constructor() {
+        // disable initializers so that the implementation contract cannot be initialized
+        _disableInitializers();
+    }
+
     /// @dev Initializes the contract by setting up roles and ownership
     function initialize() public initializer {
         __AccessControl_init();
@@ -44,17 +49,17 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    /*******************************************************************************
+                      EXTERNAL FUNCTIONS - IEOChainManager
+    *******************************************************************************/
+
     /// @dev Sets the registry coordinator which will be the only contract allowed to call the register functions
     function setRegistryCoordinator(
         address _registryCoordinator
     ) external onlyOwner {
         registryCoordinator = _registryCoordinator;
     }
-
-    /*******************************************************************************
-                      EXTERNAL FUNCTIONS - IEOChainManager
-    *******************************************************************************/
-
+    
     /// @inheritdoc IEOChainManager
     /// @dev for now there is no state change so the function is view
     function registerDataValidator(
@@ -95,5 +100,5 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     }
 
     // Placeholder for upgradeable contracts
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }
