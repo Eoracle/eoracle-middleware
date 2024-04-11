@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity =0.8.12;
 
 import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import {AccessControlUpgradeable} from
@@ -44,6 +44,11 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     modifier onlyStakeRegistry() {
         require(msg.sender == stakeRegistry, "NotStakeRegistry");
         _;
+    }
+    
+    constructor() {
+        // disable initializers so that the implementation contract cannot be initialized
+        _disableInitializers();
     }
 
     /// @dev Initializes the contract by setting up roles and ownership
