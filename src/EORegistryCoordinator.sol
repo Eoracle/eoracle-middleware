@@ -367,6 +367,7 @@ contract EORegistryCoordinator is
     function setChainManager(IEOChainManager newChainManager) external onlyOwner {
         emit ChainManagerUpdated(address(chainManager), address(newChainManager));
         chainManager = newChainManager;
+        stakeRegistry.setChainManager(newChainManager);
     }
 
     /**

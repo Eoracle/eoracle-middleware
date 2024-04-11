@@ -77,6 +77,8 @@ contract EOStakeRegistryUnitTests is MockAVSDeployer, IEOStakeRegistryEvents {
         _initializeQuorum({ minimumStake: uint96(type(uint24).max) + 1 });
         _initializeQuorum({ minimumStake: uint96(type(uint32).max) + 1 });
         _initializeQuorum({ minimumStake: uint96(type(uint64).max) + 1 });
+
+        registryCoordinator.setQuorumCount(nextQuorum);
     }
 
     /*******************************************************************************
