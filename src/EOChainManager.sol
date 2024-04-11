@@ -111,7 +111,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @param operator The address of the operator
     function deregisterValidator(
         address operator
-    ) external virtual onlyRegistryCoordinator {
+    ) external onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
         emit ValidatorDeregistered(operator);
     }
