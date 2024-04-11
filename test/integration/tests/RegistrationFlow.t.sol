@@ -69,14 +69,14 @@ contract RegistrationFlowTest is MockAVSDeployer {
         bytes memory quorumNumbers = BitmapUtils.bitmapToBytesArray(1);
 
         blsApkRegistry.setBLSPublicKey(operator, pubKey);
-        _setOperatorWeight(operator, 0, 1000);
 
         ISignatureUtils.SignatureWithSaltAndExpiry memory signature;
         IEOBLSApkRegistry.PubkeyRegistrationParams memory params;
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = 1000;
+        _setOperatorWeight(operator, 0, stakes[0]);
         cheats.prank(operator);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true);
         emit DataValidatorRegistered(operator, stakes);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
     }
@@ -98,7 +98,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
 
         ISignatureUtils.SignatureWithSaltAndExpiry memory signature;
         IEOBLSApkRegistry.PubkeyRegistrationParams memory params;
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true);
         emit DataValidatorRegistered(operator, stakes);
         cheats.prank(operator);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
@@ -107,7 +107,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
         operators[0] = operator;
         stakes[0] = 2000;
         _setOperatorWeight(operator, 0, stakes[0]);
-        vm.expectEmit(true, true, true, true);
+        vm.expectEmit(true, true);
         emit OperatorUpdated(operator, stakes);
         cheats.prank(registryCoordinatorOwner);
         registryCoordinator.updateOperators(operators);

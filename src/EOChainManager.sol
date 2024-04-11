@@ -124,7 +124,6 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         address operator,
         uint96[] calldata newStakeWeights
     ) external onlyStakeRegistry {
-        // For now just whitelisting. EO chain integration to come.
         emit OperatorUpdated(operator, newStakeWeights);
     }
 
