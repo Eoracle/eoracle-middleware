@@ -148,6 +148,7 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
     {
         // Deploy proxy admin for ability to upgrade proxy contracts
         proxyAdmin = new ProxyAdmin();
+        emit log_named_address("ProxyAdmin address: ", address(proxyAdmin));
 
         // Deploy PauserRegistry
         address[] memory pausers = new address[](3);
@@ -156,6 +157,7 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
         pausers[2] = pauser;
         address unpauser = eoracleOwner;
         pauserRegistry = new PauserRegistry(pausers, unpauser);
+        emit log_named_address("PauserRegistry address: ", address(pauserRegistry));
 
         /**
          * First, deploy upgradeable proxy contracts that **will point** to the implementations. Since the implementation contracts are
@@ -166,53 +168,76 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
                 new TransparentUpgradeableProxy(address(emptyContract), address(proxyAdmin), "")
             )
         );
+        emit log_named_address("registryCoordinator proxy address: ", address(registryCoordinator));
 
         stakeRegistry = EOStakeRegistry(
             address(
                 new TransparentUpgradeableProxy(address(emptyContract), address(proxyAdmin), "")
             )
         );
+        emit log_named_address("stakeRegistry proxy address: ", address(stakeRegistry));
 
         indexRegistry = EOIndexRegistry(
             address(
                 new TransparentUpgradeableProxy(address(emptyContract), address(proxyAdmin), "")
             )
         );
+        emit log_named_address("indexRegistry proxy address: ", address(indexRegistry));
 
         blsApkRegistry = EOBLSApkRegistry(
             address(
                 new TransparentUpgradeableProxy(address(emptyContract), address(proxyAdmin), "")
             )
         );
+        emit log_named_address("blsApkRegistry proxy address: ", address(blsApkRegistry));
 
         serviceManager = EOServiceManager(
             address(
                 new TransparentUpgradeableProxy(address(emptyContract), address(proxyAdmin), "")
             )
         );
+        emit log_named_address("serviceManager proxy address: ", address(serviceManager));
 
         // Second, deploy the *implementation* contracts, using the *proxy contracts* as inputs
         stakeRegistryImplementation = new EOStakeRegistry(registryCoordinator, delegationManager);
+        emit log_named_address(
+            "stakeRegistryImplementation address: ", address(stakeRegistryImplementation)
+        );
+
         blsApkRegistryImplementation = new EOBLSApkRegistry(registryCoordinator);
+        emit log_named_address(
+            "blsApkRegistryImplementation address: ", address(blsApkRegistryImplementation)
+        );
+
         indexRegistryImplementation = new EOIndexRegistry(registryCoordinator);
+        emit log_named_address(
+            "indexRegistryImplementation address: ", address(indexRegistryImplementation)
+        );
+
         serviceManagerImplementation =
             new EOServiceManager(_avsDirectory, registryCoordinator, stakeRegistry);
+        emit log_named_address(
+            "serviceManagerImplementation address: ", address(serviceManagerImplementation)
+        );
 
         // Third, upgrade the proxy contracts to point to the implementations
         proxyAdmin.upgrade(
             TransparentUpgradeableProxy(payable(address(stakeRegistry))),
             address(stakeRegistryImplementation)
         );
+        emit log_string("Upgraded stakeRegistry proxy");
 
         proxyAdmin.upgrade(
             TransparentUpgradeableProxy(payable(address(blsApkRegistry))),
             address(blsApkRegistryImplementation)
         );
+        emit log_string("Upgraded blsApkRegistry proxy");
 
         proxyAdmin.upgrade(
             TransparentUpgradeableProxy(payable(address(indexRegistry))),
             address(indexRegistryImplementation)
         );
+        emit log_string("Upgraded indexRegistry proxy");
 
         proxyAdmin.upgradeAndCall(
             TransparentUpgradeableProxy(payable(address(serviceManager))),
@@ -222,9 +247,14 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
                 eoracleOwner // _initialOwner
             )
         );
+        emit log_string("Upgraded serviceManager proxy");
 
         registryCoordinatorImplementation =
             new EORegistryCoordinator(serviceManager, stakeRegistry, blsApkRegistry, indexRegistry);
+        emit log_named_address(
+            "registryCoordinatorImplementation address: ",
+            address(registryCoordinatorImplementation)
+        );
 
         _initEORegistryCoordinator(
             proxyAdmin,
@@ -235,6 +265,7 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
         );
 
         operatorStateRetriever = new OperatorStateRetriever();
+        emit log_named_address("operatorStateRetriever address: ", address(operatorStateRetriever));
 
         // transfer ownership of proxy admin to upgrader
         proxyAdmin.transferOwnership(eoracleUpgrader);
@@ -283,6 +314,7 @@ contract Mainnet_DeployEOMiddlewareContracts is Utils, ExistingDeploymentParser 
                 strategyAndWeightingMultipliers
             )
         );
+        emit log_string("Upgraded registryCoordinator proxy");
     }
 
     function _parseStakeRegistryParams(string memory config_data)

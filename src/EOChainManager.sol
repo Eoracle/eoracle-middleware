@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity =0.8.12;
 
 import {OwnableUpgradeable} from "@openzeppelin-upgrades/contracts/access/OwnableUpgradeable.sol";
 import {AccessControlUpgradeable} from
@@ -15,7 +15,7 @@ import {IEOChainManager} from "./interfaces/IEOChainManager.sol";
 /// @dev Inherits IEOChainManager, Ownable2StepUpgradeable, and AccessControlUpgradeable for access control functionalities
 contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpgradeable {
     /*******************************************************************************
-                               CONSTANTS AND IMMUTABLES 
+                              CONSTANTS AND IMMUTABLES
     *******************************************************************************/
 
     /// @notice Public constants for the roles
@@ -23,16 +23,32 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     bytes32 public constant DATA_VALIDATOR_ROLE = keccak256("DATA_VALIDATOR");
 
     /*******************************************************************************
-                                       STATE 
+                                       STATE
     *******************************************************************************/
 
     // @notice The address of eoracle middleware RegistryCoordinator
     address public registryCoordinator;
+    address public stakeRegistry;
+
+    /*******************************************************************************
+                                      MODIFIERS
+    *******************************************************************************/
 
     /// @dev Modifier for registry coordinator
     modifier onlyRegistryCoordinator() {
         require(msg.sender == registryCoordinator, "NotRegistryCoordinator");
         _;
+    }
+
+    /// @dev Modifier for stake registry
+    modifier onlyStakeRegistry() {
+        require(msg.sender == stakeRegistry, "NotStakeRegistry");
+        _;
+    }
+    
+    constructor() {
+        // disable initializers so that the implementation contract cannot be initialized
+        _disableInitializers();
     }
 
     /// @dev Initializes the contract by setting up roles and ownership
@@ -44,6 +60,10 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    /*******************************************************************************
+                                     SETTERS
+    *******************************************************************************/
+
     /// @dev Sets the registry coordinator which will be the only contract allowed to call the register functions
     function setRegistryCoordinator(
         address _registryCoordinator
@@ -51,49 +71,67 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         registryCoordinator = _registryCoordinator;
     }
 
+    function setStakeRegistry(
+        address _stakeRegistry
+    ) external onlyOwner {
+        stakeRegistry = _stakeRegistry;
+    }
+    
     /*******************************************************************************
-                      EXTERNAL FUNCTIONS - IEOChainManager
+                                 EXTERNAL FUNCTIONS
     *******************************************************************************/
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
+    /// @dev Registers a data validator
+    /// @param operator The address of the operator
+    /// @param stakes The stakes of the operator in quorums
     function registerDataValidator(
         address operator,
-        uint96[] calldata /* stakes */
-    ) external view onlyRegistryCoordinator {
+        uint96[] calldata stakes
+    ) external onlyRegistryCoordinator {
         require(hasRole(DATA_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
+        emit DataValidatorRegistered(operator, stakes);
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
+    /// @dev Registers a chain validator
+    /// @param operator The address of the operator
+    /// @param stakes The stakes of the operator in quorums
+    /// @param signature The signature of the operator
+    /// @param pubkey The BLS public key of the operator
     function registerChainValidator(
         address operator,
-        uint96[] calldata /* stakes */,
-        uint256[2] calldata /* signature */,
-        uint256[4] calldata /* pubkey */
-    ) external view onlyRegistryCoordinator {
+        uint96[] calldata stakes,
+        uint256[2] calldata signature,
+        uint256[4] calldata pubkey
+    ) external onlyRegistryCoordinator {
         require(hasRole(CHAIN_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
+        emit ChainValidatorRegistered(operator, stakes);
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
+    /// @dev Deregisters a validator
+    /// @param operator The address of the operator
     function deregisterValidator(
         address operator
-    ) external view onlyRegistryCoordinator {
+    ) external onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
+        emit ValidatorDeregistered(operator);
     }
 
     /// @inheritdoc IEOChainManager
-    /// @dev for now there is no state change so the function is view
+    /// @dev Updates the stake weights of an operator
+    /// @param operator The address of the operator
+    /// @param newStakeWeights The new stake weights of the operator in quorums
     function updateOperator(
         address operator,
         uint96[] calldata newStakeWeights
-    ) external view onlyRegistryCoordinator {
-        // For now just whitelisting. EO chain integration to come.
+    ) external onlyStakeRegistry {
+        emit OperatorUpdated(operator, newStakeWeights);
     }
 
     // Placeholder for upgradeable contracts
-    uint256[50] private __gap;
+    uint256[48] private __gap;
 }
