@@ -125,11 +125,13 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @dev Updates the stake weights of an operator
     /// @param operator The address of the operator
     /// @param newStakeWeights The new stake weights of the operator in quorums
+    /// @param quorumsToUpdate quorum numbers related to operator and used for update
     function updateOperator(
         address operator,
-        uint96[] calldata newStakeWeights
+        uint96[] calldata newStakeWeights,
+        bytes calldata quorumsToUpdate
     ) external onlyStakeRegistry {
-        emit OperatorUpdated(operator, newStakeWeights);
+        emit OperatorUpdated(operator, newStakeWeights, quorumsToUpdate);
     }
 
     // Placeholder for upgradeable contracts

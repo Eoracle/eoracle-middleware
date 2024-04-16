@@ -188,7 +188,7 @@ contract EOStakeRegistry is EOStakeRegistryStorage {
             _recordTotalStakeUpdate(quorumNumber, stakeDelta);
         }
         if (address(chainManager) != address(0)){
-            chainManager.updateOperator(operator, newStakeWeights);
+            chainManager.updateOperator(operator, newStakeWeights, quorumNumbers);
         }
 
         return quorumsToRemove;
