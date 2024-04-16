@@ -7,13 +7,17 @@ import {TransparentUpgradeableProxy} from
 import {Test, console2} from "forge-std/Test.sol";
 import {EOChainManager} from "../../src/EOChainManager.sol";
 import {IEOChainManager} from "../../src/interfaces/IEOChainManager.sol";
+import {BitmapUtils} from "../../src/libraries/BitmapUtils.sol";
 
 contract EOChainManagerTest is Test {
     event DataValidatorRegistered(address indexed operator, uint96[] stakes);
     event ChainValidatorRegistered(address indexed operator, uint96[] stakes);
-    event OperatorUpdated(address indexed operator, uint96[] stakes);
+    event OperatorUpdated(address indexed operator, uint96[] stakes, bytes quorumsToUpdate);
     event ValidatorDeregistered(address indexed operator);
 
+    uint8 private constant BITMAP_SINGLE_QUORUM = 1; // 00000001 in binary, it corresponds to quorum 0
+    uint8 private constant BITMAP_TWO_QUORUMS = 3; // 00000011 in binary, it corresponds to quorum 0 and 1
+    
     ProxyAdmin private proxyAdmin;
     EOChainManager public chainManager;
     TransparentUpgradeableProxy private transparentProxy;
@@ -127,21 +131,55 @@ contract EOChainManagerTest is Test {
 
         vm.expectRevert("NotStakeRegistry");
         vm.prank(registryCoordinator);
-        chainManager.updateOperator(operator, new uint96[](0));
+        chainManager.updateOperator(operator, new uint96[](0), BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
     }
 
-    function test_UpdateOperator() public {
+    function test_UpdateOperatorSingleQuorum() public {
+        bytes memory quorumsToUpdate = BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM);
+        vm.startPrank(owner);
+        chainManager.setStakeRegistry(address(stakeRegistry));
+        chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
+        vm.stopPrank();
+        vm.expectEmit(true, false, false, true);
+        uint96[] memory stakes = new uint96[](2);
+        stakes[0] = 1000;
+        emit OperatorUpdated(operator, stakes, quorumsToUpdate);
+        vm.prank(stakeRegistry);
+        chainManager.updateOperator(operator, stakes, quorumsToUpdate);
+    }
+
+    function test_UpdateOperatorTwoQuorums() public {
+        bytes memory quorumsToUpdate = BitmapUtils.bitmapToBytesArray(BITMAP_TWO_QUORUMS);
         vm.startPrank(owner);
         chainManager.setStakeRegistry(address(stakeRegistry));
         chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
         vm.stopPrank();
         vm.expectEmit(true, true, true, true);
-        uint96[] memory stakes = new uint96[](1);
+        uint96[] memory stakes = new uint96[](2);
         stakes[0] = 1000;
-        emit OperatorUpdated(operator, stakes);
+        stakes[1] = 1500;
+        emit OperatorUpdated(operator, stakes, quorumsToUpdate);
         vm.prank(stakeRegistry);
-        chainManager.updateOperator(operator, stakes);
+        chainManager.updateOperator(operator, stakes, quorumsToUpdate);
     }
+
+    function testFuzz_UpdateOperator(uint192 bitmapQuorumNumbers) public {
+        bytes memory quorumsToUpdate = BitmapUtils.bitmapToBytesArray(bitmapQuorumNumbers);
+        uint96[] memory newStakeWeights = new uint96[](quorumsToUpdate.length);
+        for (uint256 i = 0; i < quorumsToUpdate.length; i++) {
+            uint8 quorumNumber = uint8(quorumsToUpdate[i]);
+            newStakeWeights[i] = uint96(1000);
+        }
+        vm.startPrank(owner);
+        chainManager.setStakeRegistry(address(stakeRegistry));
+        chainManager.grantRole(chainManager.DATA_VALIDATOR_ROLE(), operator);
+        vm.stopPrank();
+        vm.expectEmit(true, false, false, true);
+        emit OperatorUpdated(operator, newStakeWeights, quorumsToUpdate);
+        vm.prank(stakeRegistry);
+        chainManager.updateOperator(operator, newStakeWeights, quorumsToUpdate);
+    }
+
 
     function _registerDataValidator(address validator, uint96 stake) internal {
         uint96[] memory stakes = new uint96[](1);

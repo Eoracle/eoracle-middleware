@@ -13,7 +13,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
 
     event DataValidatorRegistered(address indexed validator, uint96[] stakes);
     event ChainValidatorRegistered(address indexed validator, uint96[] stakes);
-    event OperatorUpdated(address indexed validator, uint96[] stakes);
+    event OperatorUpdated(address indexed validator, uint96[] stakes, bytes quorumsToUpdate);
     event ValidatorDeregistered(address indexed validator);
 
     EOChainManager public chainManager;
@@ -108,7 +108,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
         stakes[0] = 2000;
         _setOperatorWeight(operator, 0, stakes[0]);
         vm.expectEmit(true, true, true, true);
-        emit OperatorUpdated(operator, stakes);
+        emit OperatorUpdated(operator, stakes, quorumNumbers);
         cheats.prank(registryCoordinatorOwner);
         registryCoordinator.updateOperators(operators);
     }

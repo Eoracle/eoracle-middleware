@@ -4,7 +4,7 @@ pragma solidity =0.8.12;
 interface IEOChainManager {
     event DataValidatorRegistered(address indexed operator, uint96[] stakes);
     event ChainValidatorRegistered(address indexed operator, uint96[] stakes);
-    event OperatorUpdated(address indexed operator, uint96[] stakes);
+    event OperatorUpdated(address indexed operator, uint96[] stakes, bytes quorumsToUpdate);
     event ValidatorDeregistered(address indexed operator);
 
     /// @notice Registers a new data validator
@@ -31,5 +31,6 @@ interface IEOChainManager {
     /// @notice Updates the stake weights of a validator
     /// @param operator The address of the operator to update
     /// @param newStakeWeights An array of new stake amounts
-    function updateOperator(address operator, uint96[] calldata newStakeWeights) external;
+    /// @param quorumsToUpdate An array of quorums related to operator and used for update
+    function updateOperator(address operator, uint96[] calldata newStakeWeights, bytes calldata quorumsToUpdate) external;
 }
