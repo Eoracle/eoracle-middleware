@@ -184,8 +184,7 @@ contract EOChainManagerTest is Test {
     function _registerDataValidator(address validator, uint96 stake) internal {
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = stake;
-        bytes memory quorumNumbers = BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM);
-        chainManager.registerDataValidator(validator, stakes, quorumNumbers);
+        chainManager.registerDataValidator(validator, stakes, BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
     }
 
     function _registerChainValidator(address validator, uint96 stake) internal {
