@@ -85,6 +85,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @dev Registers a data validator
     /// @param operator The address of the operator
     /// @param stakes The stakes of the operator in quorums
+    /// @param quorumNumbers An array of quorum numbers to register the operator in
     function registerDataValidator(
         address operator,
         uint96[] calldata stakes,
@@ -92,7 +93,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     ) external onlyRegistryCoordinator {
         require(hasRole(DATA_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
-        emit DataValidatorRegistered(operator, stakes);
+        emit DataValidatorRegistered(operator, stakes, quorumNumbers);
     }
 
     /// @inheritdoc IEOChainManager
@@ -101,6 +102,7 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @param stakes The stakes of the operator in quorums
     /// @param signature The signature of the operator
     /// @param pubkey The BLS public key of the operator
+    /// @param quorumNumbers An array of quorum numbers to register the operator in
     function registerChainValidator(
         address operator,
         uint96[] calldata stakes,
@@ -110,12 +112,13 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     ) external onlyRegistryCoordinator {
         require(hasRole(CHAIN_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
-        emit ChainValidatorRegistered(operator, stakes);
+        emit ChainValidatorRegistered(operator, stakes, quorumNumbers);
     }
 
     /// @inheritdoc IEOChainManager
     /// @dev Deregisters a validator
     /// @param operator The address of the operator
+    /// @param quorumNumbers An array of quorum numbers to deregister the operator from
     function deregisterValidator(
         address operator,
         bytes calldata quorumNumbers
