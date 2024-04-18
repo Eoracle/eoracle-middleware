@@ -11,8 +11,8 @@ import "../../utils/MockAVSDeployer.sol";
 contract RegistrationFlowTest is MockAVSDeployer {
     using BN254 for BN254.G1Point;
 
-    event DataValidatorRegistered(address indexed validator, uint96[] stakes);
-    event ChainValidatorRegistered(address indexed validator, uint96[] stakes);
+    event DataValidatorRegistered(address indexed validator, uint96[] stakes, bytes quorumNumbers);
+    event ChainValidatorRegistered(address indexed validator, uint96[] stakes, bytes quorumNumbers);
     event OperatorUpdated(address indexed validator, uint96[] stakes, bytes quorumsToUpdate);
     event ValidatorDeregistered(address indexed validator);
 
@@ -76,7 +76,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
         stakes[0] = 1000;
         _setOperatorWeight(operator, 0, stakes[0]);
         vm.expectEmit(true, true, true, true);
-        emit DataValidatorRegistered(operator, stakes);
+        emit DataValidatorRegistered(operator, stakes, quorumNumbers);
         cheats.prank(operator);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
     }
@@ -100,7 +100,7 @@ contract RegistrationFlowTest is MockAVSDeployer {
         IEOBLSApkRegistry.PubkeyRegistrationParams memory params;
         cheats.prank(operator);
         vm.expectEmit(true, true, true, true);
-        emit DataValidatorRegistered(operator, stakes);
+        emit DataValidatorRegistered(operator, stakes, quorumNumbers);
         registryCoordinator.registerOperator(quorumNumbers, params, signature);
 
         address[] memory operators = new address[](1);

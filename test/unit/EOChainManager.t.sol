@@ -10,8 +10,8 @@ import {IEOChainManager} from "../../src/interfaces/IEOChainManager.sol";
 import {BitmapUtils} from "../../src/libraries/BitmapUtils.sol";
 
 contract EOChainManagerTest is Test {
-    event DataValidatorRegistered(address indexed operator, uint96[] stakes);
-    event ChainValidatorRegistered(address indexed operator, uint96[] stakes);
+    event DataValidatorRegistered(address indexed operator, uint96[] stakes, bytes quorumNumbers);
+    event ChainValidatorRegistered(address indexed operator, uint96[] stakes, bytes quorumNumbers);
     event OperatorUpdated(address indexed operator, uint96[] stakes, bytes quorumsToUpdate);
     event ValidatorDeregistered(address indexed operator);
 
@@ -71,7 +71,7 @@ contract EOChainManagerTest is Test {
         vm.expectEmit(true, true, true, true);
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = 1000;
-        emit DataValidatorRegistered(operator, stakes);
+        emit DataValidatorRegistered(operator, stakes, BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
         vm.prank(registryCoordinator);
         _registerDataValidator(operator, stakes[0]);
     }
@@ -98,7 +98,7 @@ contract EOChainManagerTest is Test {
         vm.expectEmit(true, true, true, true);
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = 999;
-        emit ChainValidatorRegistered(operator, stakes);
+        emit ChainValidatorRegistered(operator, stakes, BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
         vm.prank(registryCoordinator);
         _registerChainValidator(operator, stakes[0]);
     }
