@@ -87,7 +87,8 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @param stakes The stakes of the operator in quorums
     function registerDataValidator(
         address operator,
-        uint96[] calldata stakes
+        uint96[] calldata stakes,
+        bytes calldata quorumNumbers
     ) external onlyRegistryCoordinator {
         require(hasRole(DATA_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
@@ -104,7 +105,8 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
         address operator,
         uint96[] calldata stakes,
         uint256[2] calldata signature,
-        uint256[4] calldata pubkey
+        uint256[4] calldata pubkey,
+        bytes calldata quorumNumbers
     ) external onlyRegistryCoordinator {
         require(hasRole(CHAIN_VALIDATOR_ROLE, operator), "NotWhitelisted");
         // For now just whitelisting. EO chain integration to come.
@@ -115,7 +117,8 @@ contract EOChainManager is IEOChainManager, OwnableUpgradeable, AccessControlUpg
     /// @dev Deregisters a validator
     /// @param operator The address of the operator
     function deregisterValidator(
-        address operator
+        address operator,
+        bytes calldata quorumNumbers
     ) external onlyRegistryCoordinator {
         // For now just whitelisting. EO chain integration to come.
         emit ValidatorDeregistered(operator);

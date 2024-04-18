@@ -10,7 +10,7 @@ interface IEOChainManager {
     /// @notice Registers a new data validator
     /// @param operator The address of the operator to register as a data validator
     /// @param stakes An array of stake amounts
-    function registerDataValidator(address operator, uint96[] calldata stakes) external;
+    function registerDataValidator(address operator, uint96[] calldata stakes, bytes calldata quorumNumbers) external;
 
     /// @notice Registers a new chain validator
     /// @param operator The address of the operator to register as a chain validator
@@ -21,12 +21,13 @@ interface IEOChainManager {
         address operator,
         uint96[] calldata stakes,
         uint256[2] memory signature,
-        uint256[4] memory pubkey
+        uint256[4] memory pubkey,
+        bytes calldata quorumNumbers
     ) external;
 
     /// @notice Deregisters a validator (data validators only)
     /// @param operator The address of the operator to deregister
-    function deregisterValidator(address operator) external;
+    function deregisterValidator(address operator, bytes calldata quorumNumbers) external;
 
     /// @notice Updates the stake weights of a validator
     /// @param operator The address of the operator to update

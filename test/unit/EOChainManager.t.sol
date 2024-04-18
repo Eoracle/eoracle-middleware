@@ -110,7 +110,7 @@ contract EOChainManagerTest is Test {
         vm.stopPrank();
 
         vm.expectRevert("NotRegistryCoordinator");
-        chainManager.deregisterValidator(operator);
+        chainManager.deregisterValidator(operator, BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
     }
 
     function test_DeregisterValidator() public {
@@ -120,7 +120,7 @@ contract EOChainManagerTest is Test {
         vm.stopPrank();
 
         vm.prank(registryCoordinator);
-        chainManager.deregisterValidator(operator);
+        chainManager.deregisterValidator(operator, BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM));
     }
 
     function test_UpdateOperatorRevertIfNotStakeRegistry() public {
@@ -184,7 +184,8 @@ contract EOChainManagerTest is Test {
     function _registerDataValidator(address validator, uint96 stake) internal {
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = stake;
-        chainManager.registerDataValidator(validator, stakes);
+        bytes memory quorumNumbers = BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM);
+        chainManager.registerDataValidator(validator, stakes, quorumNumbers);
     }
 
     function _registerChainValidator(address validator, uint96 stake) internal {
@@ -192,6 +193,7 @@ contract EOChainManagerTest is Test {
         uint256[4] memory publicKey = [uint256(3), uint256(4), uint256(5), uint256(6)];
         uint96[] memory stakes = new uint96[](1);
         stakes[0] = stake;
-        chainManager.registerChainValidator(validator, stakes, signature, publicKey);
+        bytes memory quorumNumbers = BitmapUtils.bitmapToBytesArray(BITMAP_SINGLE_QUORUM);
+        chainManager.registerChainValidator(validator, stakes, signature, publicKey, quorumNumbers);
     }
 }
