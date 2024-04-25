@@ -796,8 +796,8 @@ contract EOBLSApkRegistryUnitTests_quorumApkUpdates is EOBLSApkRegistryUnitTests
         uint256 blockGap,
         uint256 randSeed
     ) external {
-        cheats.assume(numRegistrants > 0 && numRegistrants < 100);
-        cheats.assume(blockGap < 100);
+        numRegistrants = bound(numRegistrants, 1, 99);
+        blockGap = bound(blockGap, 1, 99);
 
         bytes memory quorumNumbers = new bytes(1);
         quorumNumbers[0] = bytes1(defaultQuorumNumber);
@@ -851,8 +851,8 @@ contract EOBLSApkRegistryUnitTests_quorumApkUpdates is EOBLSApkRegistryUnitTests
         uint32 wrongBlockNumber,
         uint256 randSeed
     ) external {
-        cheats.assume(numRegistrants > 0 && numRegistrants < 100);
-        cheats.assume(indexToCheck < numRegistrants - 1);
+        numRegistrants = bound(numRegistrants, 1, 99);
+        cheats.assume(indexToCheck < numRegistrants - 1); // changing this to bound fails for some reason
         bytes memory quorumNumbers = new bytes(1);
         quorumNumbers[0] = bytes1(defaultQuorumNumber);
 
