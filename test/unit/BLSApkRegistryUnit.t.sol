@@ -792,12 +792,12 @@ contract EOBLSApkRegistryUnitTests_quorumApkUpdates is EOBLSApkRegistryUnitTests
      * register/deregistering operators for the defaultQuorumNumber
      */
     function testFuzz_quorumApkUpdates_AtBlockNumber(
-        uint8 numRegistrants,
-        uint8 blockGap,
+        uint256 numRegistrants,
+        uint256 blockGap,
         uint256 randSeed
     ) external {
-        cheats.assume(numRegistrants > 0 && numRegistrants < 100);
-        cheats.assume(blockGap < 100);
+        numRegistrants = bound(numRegistrants, 1, 99);
+        blockGap = bound(blockGap, 1, 99);
 
         bytes memory quorumNumbers = new bytes(1);
         quorumNumbers[0] = bytes1(defaultQuorumNumber);
@@ -846,14 +846,13 @@ contract EOBLSApkRegistryUnitTests_quorumApkUpdates is EOBLSApkRegistryUnitTests
      * and checking the correct revert messages are emitted for wrong blocknumber inputs
      */
     function testFuzz_quorumApkUpdates_IncorrectBlockNumber(
-        uint8 numRegistrants,
-        uint8 indexToCheck_,
+        uint256 numRegistrants,
+        uint32 indexToCheck,
         uint32 wrongBlockNumber,
         uint256 randSeed
     ) external {
-        cheats.assume(numRegistrants > 0 && numRegistrants < 100);
-        cheats.assume(indexToCheck_ < numRegistrants - 1);
-        uint32 indexToCheck = uint32(indexToCheck_);
+        numRegistrants = bound(numRegistrants, 1, 99);
+        cheats.assume(indexToCheck < numRegistrants - 1); // changing this to bound fails for some reason
         bytes memory quorumNumbers = new bytes(1);
         quorumNumbers[0] = bytes1(defaultQuorumNumber);
 
