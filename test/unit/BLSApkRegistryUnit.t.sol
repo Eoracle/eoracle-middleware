@@ -852,7 +852,7 @@ contract EOBLSApkRegistryUnitTests_quorumApkUpdates is EOBLSApkRegistryUnitTests
         uint256 randSeed
     ) external {
         numRegistrants = bound(numRegistrants, 1, 99);
-        cheats.assume(indexToCheck < numRegistrants - 1); // changing this to bound fails for some reason
+        cheats.assume(indexToCheck < numRegistrants - 1);
         bytes memory quorumNumbers = new bytes(1);
         quorumNumbers[0] = bytes1(defaultQuorumNumber);
 
